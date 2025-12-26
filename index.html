@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitwise - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="auth-box">
+            <h1>💰 Splitwise</h1>
+            <p class="subtitle">Split bills with friends easily</p>
+            
+            <div id="message"></div>
+            
+            <div class="tabs">
+                <button id="loginTabBtn" class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button id="registerTabBtn" class="tab-btn" onclick="switchTab('register')">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="tab-content active">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input 
+                        type="text" 
+                        id="loginEmail" 
+                        placeholder="Enter your email"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        placeholder="Enter your password"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <button onclick="doLogin()" class="btn-primary">Login</button>
+                
+                <div class="divider">OR</div>
+                
+                <!-- Google Login Button -->
+                <div id="googleLoginBtn"></div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="tab-content">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input 
+                        type="text" 
+                        id="registerEmail" 
+                        placeholder="Enter your email"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <input 
+                        type="password" 
+                        id="registerPassword" 
+                        placeholder="Create password (min 6 chars)"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <button onclick="doRegister()" class="btn-primary">Register</button>
+                
+                <div class="divider">OR</div>
+                
+                <!-- Google Register Button -->
+                <div id="googleRegisterBtn"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        // Initialize Google Sign-In
+        window.onload = function() {
+            // REPLACE WITH YOUR GOOGLE CLIENT ID
+            const CLIENT_ID = "561761776234-442ca5ff1qp6mqo7pdevam5bm8j0297j.apps.googleusercontent.com";
+            
+            // Login button
+            google.accounts.id.initialize({
+                client_id: CLIENT_ID,
+                callback: handleGoogleLogin
+            });
+            
+            google.accounts.id.renderButton(
+                document.getElementById("googleLoginBtn"),
+                { 
+                    theme: "outline", 
+                    size: "large",
+                    text: "signin_with",
+                    width: "100%"
+                }
+            );
+            
+            // Register button
+            google.accounts.id.renderButton(
+                document.getElementById("googleRegisterBtn"),
+                { 
+                    theme: "outline", 
+                    size: "large",
+                    text: "signup_with",
+                    width: "100%"
+                }
+            );
+        };
+    </script>
+</body>
+</html>

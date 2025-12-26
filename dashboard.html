@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitwise - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="checkAuth(); loadGroups();">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>💰 Splitwise Dashboard</h1>
+            <div class="header-right">
+                <div id="userProfile"></div>
+                <button onclick="handleLogout()" class="btn-logout">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav>
+                <button class="menu-btn active" onclick="showSection('viewGroups')">
+                    📋 View Groups
+                </button>
+                <button class="menu-btn" onclick="showSection('createGroup')">
+                    ➕ Create Group
+                </button>
+                <button class="menu-btn" onclick="showSection('addMember')">
+                    👥 Add Member
+                </button>
+                <button class="menu-btn" onclick="showSection('createSplit')">
+                    💸 Create Split
+                </button>
+                <button class="menu-btn" onclick="showSection('aiChat')">
+                    🤖 AI Assistant
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- View Groups Section -->
+            <section id="viewGroups" class="content-section" style="display: block;">
+                <h2>Your Groups</h2>
+                <div id="groupsList" class="groups-grid"></div>
+            </section>
+
+            <!-- Create Group Section -->
+            <section id="createGroup" class="content-section">
+                <h2>Create New Group</h2>
+                <div class="form-card">
+                    <div class="input-group">
+                        <label>Group Name *</label>
+                        <input type="text" id="groupName" placeholder="e.g., Roommates, Trip to Goa">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Description</label>
+                        <textarea id="description" placeholder="Optional description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Add Members (comma-separated emails)</label>
+                        <input type="text" id="memberEmails" placeholder="friend@gmail.com, buddy@yahoo.com">
+                        <small>You'll be added as the creator automatically</small>
+                    </div>
+                    
+                    <button onclick="createNewGroup()" class="btn-primary">Create Group</button>
+                </div>
+            </section>
+
+            <!-- Add Member Section -->
+            <section id="addMember" class="content-section">
+                <h2>Add Member to Group</h2>
+                <div class="form-card">
+                    <div class="input-group">
+                        <label>Select Group *</label>
+                        <select id="selectGroup" onchange="showCurrentGroupMembers(parseInt(this.value))">
+                            <option value="">Choose a group...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Member Email *</label>
+                        <input type="email" id="memberEmail" placeholder="Enter member's email">
+                    </div>
+                    
+                    <button onclick="addMemberToGroup()" class="btn-primary">Add Member</button>
+                    
+                    <!-- Current Members Display -->
+                    <div id="currentGroupMembers" style="margin-top: 25px; display: none;">
+                        <h3 style="margin-bottom: 15px;">Current Members:</h3>
+                        <div id="membersList"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Split Section -->
+            <section id="createSplit" class="content-section">
+                <h2>Create Expense Split</h2>
+                <div class="form-card">
+                    <div class="input-group">
+                        <label>Select Group *</label>
+                        <select id="splitGroup" onchange="loadGroupMembersForSplit()">
+                            <option value="">Choose a group...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Description *</label>
+                        <input type="text" id="splitDescription" placeholder="e.g., Lunch, Movie tickets">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Total Amount (₹) *</label>
+                        <input type="number" id="splitAmount" placeholder="Enter amount">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Paid By *</label>
+                        <select id="paidBy">
+                            <option value="">Who paid?</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Split Between (Select Members) *</label>
+                        <div id="memberCheckboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 15px; border-radius: 10px;">
+                            <p style="color: #999;">Select a group first</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="createSplit()" class="btn-primary">Create Split</button>
+                </div>
+                
+                <!-- Splits History -->
+                <div style="margin-top: 40px;">
+                    <h3 style="margin-bottom: 20px;">Recent Splits</h3>
+                    <div id="splitsHistory"></div>
+                </div>
+            </section>
+
+            <!-- AI Chat Section -->
+            <section id="aiChat" class="content-section">
+                <h2>🤖 AI Assistant</h2>
+                <div class="chat-container">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="welcome-msg">
+                            👋 Hello! I'm your Splitwise AI assistant. I can understand natural language!
+                            <ul>
+                                <li>💸 "Split 200 between me and lucky"</li>
+                                <li>🧮 "Calculate 500 + 300"</li>
+                                <li>💰 "Show my balance"</li>
+                                <li>📊 "What do I owe?"</li>
+                            </ul>
+                            Just chat naturally!
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Try: 'split 200 between me and lucky'">
+                        <button onclick="sendChatMessage()" class="btn-send">Send</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
